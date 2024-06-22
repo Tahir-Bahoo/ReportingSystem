@@ -5,12 +5,12 @@ from openpyxl import load_workbook, Workbook
 from openpyxl.utils import get_column_letter
 from datetime import datetime
 import os
-# Create your views here.
+from app.models import ExcelFile
 
+excel_input = os.path.abspath(os.getcwd()) + '/app/static/ExcelSheet/input.xlsx'
 
 def index(request):
-
-    links_workbook = load_workbook('C:/Users/nas/Documents/Tahir/Reporting System/Report_script/input.xlsx', data_only=True)
+    links_workbook = load_workbook(excel_input, data_only=True)
     sheet = links_workbook['1st - Data Set - Center data']
     header_row = sheet[1]
 
@@ -20,7 +20,7 @@ def index(request):
     for row in sheet.iter_rows(min_row=1, max_row=sheet.max_row, min_col=1, max_col=1, values_only=True):
         all_centers.append(row[0])
         # print(row)
-    print(set(all_centers))
+    # print(set(all_centers))
 
 
     formatted_header_values = []
@@ -65,7 +65,7 @@ def generating_report(request):
 
 def write(theme, finding, suggestion):
 
-    workbook = load_workbook('input.xlsx')
+    workbook = load_workbook(excel_input)
     sheet = workbook['4th - Page Result']
     sheet.append([theme, f'{finding}, {suggestion}'])
     workbook.save('input.xlsx')
@@ -86,8 +86,7 @@ def main(Selected_center, Selected_date):
 
     # center,target_date = config
 
-    workbook = load_workbook(
-        'C:/Users/nas/Documents/Tahir/Reporting System/Report_script/input.xlsx')
+    workbook = load_workbook(excel_input)
     sheet = workbook['4th - Page Result']
     sheet.delete_rows(1, sheet.max_row)
     sheet.append([f'Centre', center])
@@ -96,8 +95,7 @@ def main(Selected_center, Selected_date):
     workbook.save('input.xlsx')
     workbook.close()
 
-    links_workbook = load_workbook(
-        'C:/Users/nas/Documents/Tahir/Reporting System/Report_script/input.xlsx', data_only=True)
+    links_workbook = load_workbook(excel_input, data_only=True)
     sheet = links_workbook['1st - Data Set - Center data']
     all_center_data = {}
 
