@@ -5,7 +5,6 @@ from openpyxl import load_workbook, Workbook
 from openpyxl.utils import get_column_letter
 from datetime import datetime
 import os
-from app.models import ExcelFile
 
 excel_input = os.path.abspath(os.getcwd()) + '/app/static/ExcelSheet/input.xlsx'
 
