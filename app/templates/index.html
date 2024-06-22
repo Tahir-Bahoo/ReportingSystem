@@ -1,0 +1,451 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Reporting System</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<h1>Filters</h1>
+			<div class="centerFilters row justify-content-between">
+				<div class="col-auto">
+					<div class="row">
+						<div class="col-auto">
+							<div class="input-group mb-3">
+								<label class="classLable" for="SelectMonthForm">Select Month</label>
+								<select class="form-select selectform" id="SelectMonthForm">
+									<option selected disabled>Choose...</option>
+									{% for value in header_values %}
+										<option value="{{ value }}">{{ value }}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="col-auto">
+							<div class="input-group mb-3">
+								<label class="classLable" for="SelectCenterForm">Select Center</label>
+								<select class="form-select selectform" id="SelectCenterForm">
+									<option selected disabled>Choose...</option>
+									<option value="Centre 1">Centre 1</option>
+									<option value="Centre 2">Centre 2</option>
+									<option value="Centre 3">Centre 3</option>
+									<option value="Centre 4">Centre 4</option>
+									<option value="Centre 5">Centre 5</option>
+									<option value="Centre 6">Centre 6</option>
+									<option value="Centre 7">Centre 7</option>
+									<option value="Centre 8">Centre 8</option>
+									<option value="Centre 9">Centre 9</option>
+									<option value="Centre 10">Centre 10</option>
+									{% comment %} {% for center in all_centers %}
+										<option value="{{ center }}">{{ center }}</option>
+									{% endfor %} {% endcomment %}
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-auto">
+					<div class="input-group mb-3">
+						<label class="classLable" for="inputGroupSelect03">Current Filter Section</label>
+						<select class="form-select selectform" id="inputGroupSelect03">
+							<option selected >Choose...</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+						</select>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="row">
+			<div class="centerFilters row">
+				<div class="col-auto">
+					<div class="input-group mb-3">
+						<label class="classLable" for="StateSelect">State</label>
+						<select class="form-select selectform" id="StateSelect">
+							<option selected>Choose...</option>
+							<option value="1">One</option>
+							<option value="2">Two</option>
+							<option value="3">Three</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-auto">
+					<div class="input-group mb-3">
+						<label class="classLable" for="portfolioSelect">Portfolio</label>
+						<select class="form-select selectform" id="portfolioSelect">
+							<option selected>Choose...</option>
+							<option value="1">One</option>
+							<option value="2">Two</option>
+							<option value="3">Three</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-auto">
+					<div class="input-group mb-3">
+						<label class="classLable" for="groupSelect">Group</label>
+						<select class="form-select selectform" id="groupSelect">
+							<option selected>Choose...</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+						</select>
+					</div>
+				</div>
+
+
+			</div>
+
+		</div>
+
+
+		<div class="Occupancy mb-5">
+			<div class="row align-items-center justify-content-around mb-5">
+				<div class="col-lg-auto">
+					<h1>Occupancy</h1>
+				</div>
+				<div class="col-lg-7">
+					<div class="row justify-content-around tableSection align-items-center">
+
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Actual occupancy</h5>
+							<span id="total_occupancy">
+								--
+							</span>
+						</div>
+						<div class="new"></div>
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Budget Occupancy</h5>
+							<span id="budget_occupancy">
+								--
+							</span>
+						</div>
+						<div class="new"></div>
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Casual Occupancy</h5>
+							<span id="casual_occupancy">
+								--
+							</span>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="Detail">
+
+					<div class="description">
+						<h5 class="mb-4">Finding</h5>
+						<p>School Occupancy is Actual occupancy which is below the target of Budgeted occupancy, Consider strategies to increase occupancy. This could include improving marketing efforts, strengthening community relationships, or introducing incentives for referrals.</p>
+						<!-- <div class="button text-center">
+							<button>
+								Add Selected Actions
+							</button>
+						</div> -->
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+		<div class="Attraction/Conversion mb-5">
+			<div class="row align-items-center justify-content-around mb-5">
+				<div class="col-lg-auto">
+					<h1>Attraction/ <br> Conversion</h1>
+				</div>
+				<div class="col-lg-8">
+					<div class="row justify-content-around tableSection align-items-center">
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Tours</h5>
+							<span id="tours">--</span>
+						</div>
+						<div class="new"></div>
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Tour Booking Conversion</h5>
+							<span id="tour_booking_conversion">--</span>
+						</div>
+						<div class="new"></div>
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Offer Made</h5>
+							<span id="offers_made">--</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="Detail">
+
+					<div class="description">
+						<h5 class="mb-4">Finding</h5>
+						<p>Scheduled number of  Tours  is below the average of  12.0%, Consider increasing local marketing efforts, connecting with local mum groups, play groups, and providing incentives for scheduled tours.</p>
+						<!-- <div class="button text-center">
+							<button>
+								Add Selected Actions
+							</button>
+						</div> -->
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+
+
+
+		<div class="Churn/Retention mb-5">
+			<div class="row align-items-center justify-content-around mb-5">
+				<div class="col-lg-auto">
+					<h1>Churn/ <br> Retention</h1>
+				</div>
+				<div class="col-lg-8">
+					<div class="row justify-content-around tableSection align-items-center">
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Starts</h5>
+							<span id="starts">--</span>
+						</div>
+						<div class="new"></div>
+						<!-- <div class="new"></div> -->
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Exits</h5>
+							<span id="exits">--</span>
+						</div>
+						<div class="new"></div>
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Exits - Under 2</h5>
+							<span id="exits_under_2">--</span>
+						</div>
+						<div class="new"></div>
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Exits - 25 tot 36 Months</h5>
+							<span id="exits_25_36_months">--</span>
+						</div>
+						<div class="new"></div>
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Exits - Over 3</h5>
+							<span id="exits_over_3">--</span>
+						</div>
+						<div class="new"></div>
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Exits in the first 8 weeks</h5>
+							<span id="upto_8_week_exits">--</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="Detail">
+
+					<div class="description">
+						<h5 class="mb-4">Finding</h5>
+						<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis itaque praesentium at id
+							dolore incidunt repellat. Ducimus quae id eligendi quidem doloribus, deleniti possimus
+							cupiditate laborum quia nulla, suscipit ipsa rerum minus, in deserunt nihil labore? Error,
+							vero. Error cumque porro possimus quo quae perspiciatis eveniet ex laboriosam natus rem, qui
+							eligendi ea similique voluptates. Rerum animi eaque obcaecati repudiandae? Accusantium vel
+							omnis corrupti, error pariatur provident ullam! Voluptates exercitationem corporis
+							laboriosam, voluptatem commodi a dolores tempora, libero, laborum ratione cupiditate.
+							Distinctio eligendi iusto nesciunt impedit ipsum, obcaecati laboriosam reprehenderit et
+							recusandae doloremque delectus temporibus quasi perspiciatis qui repellendus placeat.</p>
+						<!-- <div class="button text-center">
+							<button>
+								Add Selected Actions
+							</button>
+						</div> -->
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+
+
+
+		<div class="Families mb-5">
+			<div class="row align-items-center justify-content-around mb-5">
+				<div class="col-lg-auto">
+					<h1>Families</h1>
+				</div>
+				<div class="col-lg-8">
+					<div class="row justify-content-around tableSection align-items-center">
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>NPM Score - Current</h5>
+							<span id="centre_NPS_score_existing">--</span>
+						</div>
+						<div class="new"></div>
+						<!-- <div class="new"></div> -->
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>NPM Score - New</h5>
+							<span id="centre_NPS_score_new">--</span>
+						</div>
+						<div class="new"></div>
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>NPM Score - Parents</h5>
+							<span id="centre_NPS_score_parents">--</span>
+						</div>
+						<div class="new"></div>
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Post Tour NPS</h5>
+							<span class="post_tour_NPS">--</span>
+						</div>
+						<div class="new"></div>
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Child incident</h5>
+							<span id="child_incidents">--</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="Detail">
+
+					<div class="description">
+						<h5 class="mb-4">Finding</h5>
+						<p>Text in progress</p>
+						<!-- <div class="button text-center">
+							<button>
+								Add Selected Actions
+							</button>
+						</div> -->
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+
+
+		<div class="Employee mb-5">
+			<div class="row align-items-center justify-content-around mb-5">
+				<div class="col-lg-auto">
+					<h1>Employee</h1>
+				</div>
+				<div class="col-lg-8">
+					<div class="row justify-content-around tableSection align-items-center">
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Turnover</h5>
+							<span id="turnover">--</span>
+						</div>
+						<div class="new"></div>
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Programming Hours</h5>
+							<span id="programming_hours">--</span>
+						</div>
+						<div class="new"></div>
+							<div class="tableSteps col-6 col-sm-4 col-md-auto">
+								<h5>Target Programming Hours</h5>
+								<span id="target_programming_hours">--</span>
+							</div>
+							<div class="new"></div>
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Post Tour NPS</h5>
+							<span class="post_tour_NPS">--</span>
+						</div>
+						<div class="new"></div>
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Employee incident</h5>
+							<span id="employee_incidents">--</span>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="Detail">
+
+					<div class="description">
+						<h5 class="mb-4">Finding</h5>
+						<p>There is an extreme staff retention issue with a last twelve month turnover rate above 40.0%, Improve team experience and implement exit surveys, get the HR team involved.</p>
+						<!-- <div class="button text-center">
+							<button>
+								Add Selected Actions
+							</button>
+						</div> -->
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+		crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.7.0.js"
+		integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+
+	<script>
+		$(document).ready(function() {
+			$('#SelectMonthForm, #SelectCenterForm').change(function() {
+				var select_month = $('#SelectMonthForm').val();
+				var select_center = $('#SelectCenterForm').val();
+		
+				if (select_month !== null && select_center !== null) {
+					$.ajax({
+						url: 'generating_report',
+						type: 'POST',
+						data: {
+							date: select_month,
+							center: select_center
+						},
+						success: function(response) {
+							console.log('Success:', response);
+							$('#total_occupancy').html((response['Actual occupancy'] * 100).toFixed(0) + '%');
+							 $('#budget_occupancy').html((response['Budgeted occupancy'] * 100).toFixed(0) + '%');
+							 $('#casual_occupancy').html((response['Casual occupancy'] * 100).toFixed(1) + '%');
+							 
+							 $('#tours').html(response['Tours']);
+							 $('#tour_booking_conversion').html((response['Tour Booking Conversion'] * 100).toFixed(0) + '%');
+							 $('#offers_made').html(response['Offers Made']);
+
+							 $('#starts').html(response['Starts']);
+							 $('#exits').html(response['Exits']);
+							 $('#exits_under_2').html(response['Exits  - Under 2']);
+							 $('#exits_25_36_months').html(response['Exits  - 25-36 Months']);
+							 $('#exits_over_3').html(response['Exits  - Over 3']);
+							 $('#upto_8_week_exits').html(response['Up to 8 Week Exits']);
+
+							 $('#centre_NPS_score_existing').html(response['Centre NPS Score - Existing']);
+							 $('#centre_NPS_score_new').html(response['Centre NPS Score - New']);
+							 $('#centre_NPS_score_parents').html(response['Centre NPS Score - Parents']);
+							 $('.post_tour_NPS').html(response['Post Tour NPS']);
+							 $('#child_incidents').html(response['Child Incidents']);
+
+							 $('#turnover').html((response['Turnover (Perm - Voluntary)'] * 100).toFixed(0) + '%');
+							 $('#programming_hours').html(response['Programming Hours']);
+							 $('#target_programming_hours').html(response['Target Programming Hours']);
+							 $('#employee_incidents').html(response['Employee Incidents']);
+
+						},
+						error: function(xhr, status, error) {
+							console.error('Error:', status, error);
+						}
+					});
+				}
+			});
+		});
+	</script>
+</body>
+
+</html>
