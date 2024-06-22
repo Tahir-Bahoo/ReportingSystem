@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-g#r(ykfac7^559o(2rwk69tg2bk@3n8fvdl)$9#9bf6qjrqo0u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+import os
+
+ALLOWED_HOSTS = ['34.234.75.56','127.0.0.1',]
 
 
 # Application definition
@@ -55,7 +57,7 @@ ROOT_URLCONF = 'reportsystem.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
