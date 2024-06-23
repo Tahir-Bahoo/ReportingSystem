@@ -6,7 +6,7 @@ from openpyxl.utils import get_column_letter
 from datetime import datetime
 import os
 
-excel_input = os.path.abspath(os.getcwd()) + '/app/static/ExcelSheet/input.xlsx'
+excel_input = os.path.abspath(os.getcwd() + '/app/static/ExcelSheet/input.xlsx')
 
 def index(request):
     links_workbook = load_workbook(excel_input, data_only=True)
@@ -49,31 +49,42 @@ def generating_report(request):
         print(date)
         print(center)
 
-        data = main(center, date)
+        data, all_findings = main(center, date)
 
-        response_data = {}
+        response_data = {
+            'all_findings' : all_findings,
+        }
+        print('Here is the:', data)
+        print('Here is the:', all_findings)
 
         for val in data:
             response_data[val] = data[val]
-        print(response_data.keys())
 	
         return JsonResponse(response_data)
 
     return JsonResponse({"messaaage": "error"})
 
 
-def write(theme, finding, suggestion):
+# def write(theme, finding, suggestion):
 
-    workbook = load_workbook(excel_input)
-    sheet = workbook['4th - Page Result']
-    sheet.append([theme, f'{finding}, {suggestion}'])
-    workbook.save('input.xlsx')
+    
+#     print('\n\n')
+#     print('This is rite Function')
+#     print('\n\n')
+
+#     workbook = load_workbook(excel_input)
+#     sheet = workbook['4th - Page Result']
+#     sheet.append([theme, f'{finding}, {suggestion}'])
+#     workbook.save(excel_input)
+
+    
 
 
 def main(Selected_center, Selected_date):
 
     rows = []
     data = {}
+    all_findings = {}
     # config = open('config.txt','r',encoding='utf-8-sig').readlines()
     # config = [x.strip().split('>')[-1] for x in config if x.strip()!='']
 
@@ -91,7 +102,7 @@ def main(Selected_center, Selected_date):
     sheet.append([f'Centre', center])
     sheet.append([f'Target date', target_date])
     sheet.append([f'', ''])
-    workbook.save('input.xlsx')
+    workbook.save(excel_input)
     workbook.close()
 
     links_workbook = load_workbook(excel_input, data_only=True)
@@ -298,12 +309,22 @@ def main(Selected_center, Selected_date):
                                     f'>>> [FILTER 2 PASSED] [AND CONDITION]: {parameter_3} [{prm_3}] {sign} {prm_4_nm} [{prm_4}]')
                                 print(
                                     f'>>> [WRITING TO OUTPUT]: AND condition was detected, both filters have passed, writing the text into output')
-                                write(theme, finding, suggestion)
+                                # write(theme, finding, suggestion)
+                                if theme in all_findings:
+                                    all_findings[theme] += " " + finding
+                                else:
+                                    all_findings[theme] = finding
+
+                                
                                 final_flg = 1
                     else:
                         print(
                             f'>>> [WRITING TO OUTPUT]: Since filter 1 has passed and there is no AND condition so writing the text into output')
-                        write(theme, finding, suggestion)
+                        # write(theme, finding, suggestion)
+                        if theme in all_findings:
+                            all_findings[theme] += " " + finding
+                        else:
+                            all_findings[theme] = finding
                 else:
                     link = str(row[7]).strip()
                     final_flg = 0
@@ -380,9 +401,17 @@ def main(Selected_center, Selected_date):
                                     f'>>> [FILTER 2 PASSED] [OR CONDITION]: {parameter_3} [{prm_3}] {sign} {prm_4_nm} [{prm_4}]')
                                 print(
                                     f'>>> [WRITING TO OUTPUT]: Since filter 1 did not pass, however there was a OR condition and filter 2 passed so writing the text into output')
-                                write(theme, finding, suggestion)
+                                # write(theme, finding, suggestion)
+                                if theme in all_findings:
+                                    all_findings[theme] += " " + finding
+                                else:
+                                    all_findings[theme] = finding
                                 final_flg = 1
         except Exception as e:
-            print(e, e.__traceback__.tb_lineno)
+            print(e, e.__traceback__.tb_lineno, 'learn')
 
-        return data
+
+    # print('\n\n')
+    # print('all_findings', all_findings)
+    # print('\n\n')
+    return data, all_findings

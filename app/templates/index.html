@@ -146,7 +146,7 @@
 
 					<div class="description">
 						<h5 class="mb-4">Finding</h5>
-						<p>School Occupancy is Actual occupancy which is below the target of Budgeted occupancy, Consider strategies to increase occupancy. This could include improving marketing efforts, strengthening community relationships, or introducing incentives for referrals.</p>
+						<p id="occupancy_findings">There are No Findings Yet!</p>
 						<!-- <div class="button text-center">
 							<button>
 								Add Selected Actions
@@ -188,7 +188,7 @@
 
 					<div class="description">
 						<h5 class="mb-4">Finding</h5>
-						<p>Scheduled number of  Tours  is below the average of  12.0%, Consider increasing local marketing efforts, connecting with local mum groups, play groups, and providing incentives for scheduled tours.</p>
+						<p id="attraction_conversion_findings">There are No Findings Yet!</p>
 						<!-- <div class="button text-center">
 							<button>
 								Add Selected Actions
@@ -248,15 +248,7 @@
 
 					<div class="description">
 						<h5 class="mb-4">Finding</h5>
-						<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis itaque praesentium at id
-							dolore incidunt repellat. Ducimus quae id eligendi quidem doloribus, deleniti possimus
-							cupiditate laborum quia nulla, suscipit ipsa rerum minus, in deserunt nihil labore? Error,
-							vero. Error cumque porro possimus quo quae perspiciatis eveniet ex laboriosam natus rem, qui
-							eligendi ea similique voluptates. Rerum animi eaque obcaecati repudiandae? Accusantium vel
-							omnis corrupti, error pariatur provident ullam! Voluptates exercitationem corporis
-							laboriosam, voluptatem commodi a dolores tempora, libero, laborum ratione cupiditate.
-							Distinctio eligendi iusto nesciunt impedit ipsum, obcaecati laboriosam reprehenderit et
-							recusandae doloremque delectus temporibus quasi perspiciatis qui repellendus placeat.</p>
+						<p id="churn_retention_findings">There are No Findings Yet!</p>
 						<!-- <div class="button text-center">
 							<button>
 								Add Selected Actions
@@ -311,7 +303,7 @@
 
 					<div class="description">
 						<h5 class="mb-4">Finding</h5>
-						<p>Text in progress</p>
+						<p id="families_findings">There are No Findings Yet!</p>
 						<!-- <div class="button text-center">
 							<button>
 								Add Selected Actions
@@ -365,7 +357,7 @@
 
 					<div class="description">
 						<h5 class="mb-4">Finding</h5>
-						<p>There is an extreme staff retention issue with a last twelve month turnover rate above 40.0%, Improve team experience and implement exit surveys, get the HR team involved.</p>
+						<p id="employee_findings">There are No Findings Yet!</p>
 						<!-- <div class="button text-center">
 							<button>
 								Add Selected Actions
@@ -410,32 +402,49 @@
 							center: select_center
 						},
 						success: function(response) {
+							const all_findings = response['all_findings']
 							console.log('Success:', response);
 							$('#total_occupancy').html((response['Actual occupancy'] * 100).toFixed(0) + '%');
-							 $('#budget_occupancy').html((response['Budgeted occupancy'] * 100).toFixed(0) + '%');
-							 $('#casual_occupancy').html((response['Casual occupancy'] * 100).toFixed(1) + '%');
-							 
-							 $('#tours').html(response['Tours']);
-							 $('#tour_booking_conversion').html((response['Tour Booking Conversion'] * 100).toFixed(0) + '%');
-							 $('#offers_made').html(response['Offers Made']);
+							$('#budget_occupancy').html((response['Budgeted occupancy'] * 100).toFixed(0) + '%');
+							$('#casual_occupancy').html((response['Casual occupancy'] * 100).toFixed(1) + '%');
+							$('#occupancy_findings').html(response['all_findings']['Occupancy']);
+							
+							$('#tours').html(response['Tours']);
+							$('#tour_booking_conversion').html((response['Tour Booking Conversion'] * 100).toFixed(0) + '%');
+							$('#offers_made').html(response['Offers Made']);
+							$('#attraction_conversion_findings').html(response['all_findings']['Attraction / Conversion']);
 
-							 $('#starts').html(response['Starts']);
-							 $('#exits').html(response['Exits']);
-							 $('#exits_under_2').html(response['Exits  - Under 2']);
-							 $('#exits_25_36_months').html(response['Exits  - 25-36 Months']);
-							 $('#exits_over_3').html(response['Exits  - Over 3']);
-							 $('#upto_8_week_exits').html(response['Up to 8 Week Exits']);
+							$('#starts').html(response['Starts']);
+							$('#exits').html(response['Exits']);
+							$('#exits_under_2').html(response['Exits  - Under 2']);
+							$('#exits_25_36_months').html(response['Exits  - 25-36 Months']);
+							$('#exits_over_3').html(response['Exits  - Over 3']);
+							$('#upto_8_week_exits').html(response['Up to 8 Week Exits']);
+							$('#churn_retention_findings').html(response['all_findings']['Churn / Retention']);
 
-							 $('#centre_NPS_score_existing').html(response['Centre NPS Score - Existing']);
-							 $('#centre_NPS_score_new').html(response['Centre NPS Score - New']);
-							 $('#centre_NPS_score_parents').html(response['Centre NPS Score - Parents']);
-							 $('.post_tour_NPS').html(response['Post Tour NPS']);
-							 $('#child_incidents').html(response['Child Incidents']);
+							$('#centre_NPS_score_existing').html(response['Centre NPS Score - Existing']);
+							$('#centre_NPS_score_new').html(response['Centre NPS Score - New']);
+							$('#centre_NPS_score_parents').html(response['Centre NPS Score - Parents']);
+							$('.post_tour_NPS').html(response['Post Tour NPS']);
+							$('#child_incidents').html(response['Child Incidents']);
+							$('#families_findings').html(response['all_findings']['Families']);
 
-							 $('#turnover').html((response['Turnover (Perm - Voluntary)'] * 100).toFixed(0) + '%');
-							 $('#programming_hours').html(response['Programming Hours']);
-							 $('#target_programming_hours').html(response['Target Programming Hours']);
-							 $('#employee_incidents').html(response['Employee Incidents']);
+							$('#turnover').html((response['Turnover (Perm - Voluntary)'] * 100).toFixed(0) + '%');
+							$('#programming_hours').html(response['Programming Hours']);
+							$('#target_programming_hours').html(response['Target Programming Hours']);
+							$('#employee_incidents').html(response['Employee Incidents']);
+							$('#employee_findings').html(response['all_findings']['Employees']);
+
+							Object.keys(all_findings).forEach(category => {
+								// Check if the category exists in response['all_findings']
+								if (response['all_findings'].hasOwnProperty(category)) {
+									// Update the HTML content with the findings
+									$(all_findings[category]).html(response['all_findings'][category]);
+								} else {
+									// If category doesn't exist, show "No Findings"
+									$(all_findings[category]).html("No Findings");
+								}
+							});
 
 						},
 						error: function(xhr, status, error) {
