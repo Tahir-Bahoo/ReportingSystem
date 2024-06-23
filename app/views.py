@@ -66,8 +66,6 @@ def generating_report(request):
 
 
 # def write(theme, finding, suggestion):
-
-    
 #     print('\n\n')
 #     print('This is rite Function')
 #     print('\n\n')
@@ -95,15 +93,6 @@ def main(Selected_center, Selected_date):
     # target_date = 'Oct-2022'
 
     # center,target_date = config
-
-    workbook = load_workbook(excel_input)
-    sheet = workbook['4th - Page Result']
-    sheet.delete_rows(1, sheet.max_row)
-    sheet.append([f'Centre', center])
-    sheet.append([f'Target date', target_date])
-    sheet.append([f'', ''])
-    workbook.save(excel_input)
-    workbook.close()
 
     links_workbook = load_workbook(excel_input, data_only=True)
     sheet = links_workbook['1st - Data Set - Center data']
