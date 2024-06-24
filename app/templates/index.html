@@ -15,11 +15,12 @@
 	<div class="container-fluid">
 		<div class="row">
 			<h1>Filters</h1>
+
 			<div class="centerFilters row justify-content-between">
 				<div class="col-auto">
 					<div class="row">
 						<div class="col-auto">
-							<div class="input-group mb-3">
+							<div class="input-group">
 								<label class="classLable" for="SelectMonthForm">Select Month</label>
 								<select class="form-select selectform" id="SelectMonthForm">
 									<option selected disabled>Choose...</option>
@@ -30,7 +31,7 @@
 							</div>
 						</div>
 						<div class="col-auto">
-							<div class="input-group mb-3">
+							<div class="input-group">
 								<label class="classLable" for="SelectCenterForm">Select Center</label>
 								<select class="form-select selectform" id="SelectCenterForm">
 									<option selected disabled>Choose...</option>
@@ -54,7 +55,7 @@
 				</div>
 
 				<div class="col-auto">
-					<div class="input-group mb-3">
+					<!-- <div class="input-group mb-3">
 						<label class="classLable" for="inputGroupSelect03">Current Filter Section</label>
 						<select class="form-select selectform" id="inputGroupSelect03">
 							<option selected >Choose...</option>
@@ -62,12 +63,14 @@
 							<option value="2">2</option>
 							<option value="3">3</option>
 						</select>
-					</div>
+					</div> -->
+					<a href="{% url 'home:dashboard' %}"><button class="dashboard_button" type="button" >Go to Dashboard</button></a>
+					
 				</div>
 			</div>
 
 		</div>
-		<div class="row">
+		<!-- <div class="row">
 			<div class="centerFilters row">
 				<div class="col-auto">
 					<div class="input-group mb-3">
@@ -106,7 +109,7 @@
 
 			</div>
 
-		</div>
+		</div> -->
 
 
 		<div class="Occupancy mb-5">
@@ -368,6 +371,11 @@
 
 				</div>
 			</div>
+		</div>
+
+		<div class="container m-auto text-center mb-5">
+			<a href="{% url 'home:logoutuser' %}"><button class="dashboard_button">Logout</button></a>
+			
 		</div>
 
 

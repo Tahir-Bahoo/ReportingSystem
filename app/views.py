@@ -5,10 +5,21 @@ from openpyxl import load_workbook, Workbook
 from openpyxl.utils import get_column_letter
 from datetime import datetime
 import os
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from app.models import ExcelFile
 
-excel_input = os.path.abspath(os.getcwd() + '/app/static/ExcelSheet/input.xlsx')
+
 
 def index(request):
+    
+    if request.user.is_anonymous:
+        return redirect('home:loginuser')
+    
+    excel_path = ExcelFile.objects.last()
+    excel_input = os.path.abspath(os.getcwd() + f'/media/{excel_path}')
+
     links_workbook = load_workbook(excel_input, data_only=True)
     sheet = links_workbook['1st - Data Set - Center data']
     header_row = sheet[1]
@@ -39,6 +50,37 @@ def index(request):
 
     return render(request, 'index.html', context)
 
+def dashboard(request):
+    if request.user.is_anonymous:
+        return redirect('home:loginuser')
+    return render(request, 'dashboard.html', ) 
+
+
+
+
+def loginuser(request):
+    if request.user.is_authenticated:
+        return redirect('home:index')
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(username = username, password = password)
+        if user is not None:
+            login(request, user)
+            return redirect('home:index')
+        else:
+            return redirect('home:loginuser')
+    
+    return render(request, "login.html")
+
+
+
+def logoutuser(request):
+    logout(request)
+    return redirect('home:loginuser')
+
 
 @csrf_exempt
 def generating_report(request):
@@ -54,8 +96,12 @@ def generating_report(request):
         response_data = {
             'all_findings' : all_findings,
         }
-        print('Here is the:', data)
-        print('Here is the:', all_findings)
+        print('\n\n')
+        for key in all_findings:
+
+            print(key)            # Print the key
+            print(all_findings[key])  # Print the corresponding value
+            print('\n\n') 
 
         for val in data:
             response_data[val] = data[val]
@@ -79,6 +125,9 @@ def generating_report(request):
 
 
 def main(Selected_center, Selected_date):
+    
+    excel_path = ExcelFile.objects.last()
+    excel_input = os.path.abspath(os.getcwd() + f'/media/{excel_path}')
 
     rows = []
     data = {}
@@ -300,9 +349,9 @@ def main(Selected_center, Selected_date):
                                     f'>>> [WRITING TO OUTPUT]: AND condition was detected, both filters have passed, writing the text into output')
                                 # write(theme, finding, suggestion)
                                 if theme in all_findings:
-                                    all_findings[theme] += " " + finding
+                                    all_findings[theme] += " " + finding + " " + suggestion
                                 else:
-                                    all_findings[theme] = finding
+                                    all_findings[theme] = finding + " " + suggestion
 
                                 
                                 final_flg = 1
@@ -311,9 +360,9 @@ def main(Selected_center, Selected_date):
                             f'>>> [WRITING TO OUTPUT]: Since filter 1 has passed and there is no AND condition so writing the text into output')
                         # write(theme, finding, suggestion)
                         if theme in all_findings:
-                            all_findings[theme] += " " + finding
+                            all_findings[theme] += " " + finding + " " + suggestion
                         else:
-                            all_findings[theme] = finding
+                            all_findings[theme] = finding + " " + suggestion
                 else:
                     link = str(row[7]).strip()
                     final_flg = 0
@@ -392,9 +441,10 @@ def main(Selected_center, Selected_date):
                                     f'>>> [WRITING TO OUTPUT]: Since filter 1 did not pass, however there was a OR condition and filter 2 passed so writing the text into output')
                                 # write(theme, finding, suggestion)
                                 if theme in all_findings:
-                                    all_findings[theme] += " " + finding
+                                    all_findings[theme] += " " + finding + " " + suggestion
+
                                 else:
-                                    all_findings[theme] = finding
+                                    all_findings[theme] = finding + " " + suggestion
                                 final_flg = 1
         except Exception as e:
             print(e, e.__traceback__.tb_lineno, 'learn')

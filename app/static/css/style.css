@@ -11,8 +11,8 @@ h5{
 }
 .centerFilters{
     gap: 10px;
-    margin-top: 20px;
-    margin-bottom: 10px;
+    margin: 20px 0px;
+    align-items: center;
 }
 .selectform{
     background-color: #e3e3e31f;
@@ -84,7 +84,18 @@ h5{
     padding: 0px;
 
 }
-
+.dashboard_button{
+    border: none;
+    background: #e1e1e1;
+    padding: 15px 25px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-family: sans-serif;
+    transition: .3s ease-out;
+}
+.dashboard_button:hover{
+    background-color: #cbcbcb;
+}
 
 @media screen and (max-width: 991px){
     h1{
