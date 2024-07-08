@@ -25,7 +25,7 @@
 								<select class="form-select selectform" id="SelectMonthForm">
 									<option selected disabled>Choose...</option>
 									{% for value in header_values %}
-										<option value="{{ value }}">{{ value }}</option>
+									<option value="{{ value }}">{{ value }}</option>
 									{% endfor %}
 								</select>
 							</div>
@@ -46,7 +46,7 @@
 									<option value="Centre 9">Centre 9</option>
 									<option value="Centre 10">Centre 10</option>
 									{% comment %} {% for center in all_centers %}
-										<option value="{{ center }}">{{ center }}</option>
+									<option value="{{ center }}">{{ center }}</option>
 									{% endfor %} {% endcomment %}
 								</select>
 							</div>
@@ -64,8 +64,9 @@
 							<option value="3">3</option>
 						</select>
 					</div> -->
-					<a href="{% url 'home:dashboard' %}"><button class="dashboard_button" type="button" >Go to Dashboard</button></a>
-					
+					<a href="{% url 'home:dashboard' %}"><button class="dashboard_button" type="button">Go to
+							Dashboard</button></a>
+
 				</div>
 			</div>
 
@@ -274,18 +275,18 @@
 				<div class="col-lg-8">
 					<div class="row justify-content-around tableSection align-items-center">
 						<div class="tableSteps col-6 col-sm-4 col-md-auto">
-							<h5>NPM Score - Current</h5>
+							<h5>NPS Score - Current</h5>
 							<span id="centre_NPS_score_existing">--</span>
 						</div>
 						<div class="new"></div>
 						<!-- <div class="new"></div> -->
 						<div class="tableSteps col-6 col-sm-4 col-md-auto">
-							<h5>NPM Score - New</h5>
+							<h5>NPS Score - New</h5>
 							<span id="centre_NPS_score_new">--</span>
 						</div>
 						<div class="new"></div>
 						<div class="tableSteps col-6 col-sm-4 col-md-auto">
-							<h5>NPM Score - Parents</h5>
+							<h5>NPS Score - Parents</h5>
 							<span id="centre_NPS_score_parents">--</span>
 						</div>
 						<div class="new"></div>
@@ -337,11 +338,11 @@
 							<span id="programming_hours">--</span>
 						</div>
 						<div class="new"></div>
-							<div class="tableSteps col-6 col-sm-4 col-md-auto">
-								<h5>Target Programming Hours</h5>
-								<span id="target_programming_hours">--</span>
-							</div>
-							<div class="new"></div>
+						<div class="tableSteps col-6 col-sm-4 col-md-auto">
+							<h5>Target Programming Hours</h5>
+							<span id="target_programming_hours">--</span>
+						</div>
+						<div class="new"></div>
 						<div class="tableSteps col-6 col-sm-4 col-md-auto">
 							<h5>Post Tour NPS</h5>
 							<span class="post_tour_NPS">--</span>
@@ -367,15 +368,13 @@
 							</button>
 						</div> -->
 					</div>
-
-
 				</div>
 			</div>
 		</div>
 
 		<div class="container m-auto text-center mb-5">
 			<a href="{% url 'home:logoutuser' %}"><button class="dashboard_button">Logout</button></a>
-			
+
 		</div>
 
 
@@ -396,11 +395,11 @@
 		integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 
 	<script>
-		$(document).ready(function() {
-			$('#SelectMonthForm, #SelectCenterForm').change(function() {
+		$(document).ready(function () {
+			$('#SelectMonthForm, #SelectCenterForm').change(function () {
 				var select_month = $('#SelectMonthForm').val();
 				var select_center = $('#SelectCenterForm').val();
-		
+
 				if (select_month !== null && select_center !== null) {
 					$.ajax({
 						url: 'generating_report',
@@ -409,18 +408,17 @@
 							date: select_month,
 							center: select_center
 						},
-						success: function(response) {
+						success: function (response) {
 							const all_findings = response['all_findings']
-							console.log('Success:', response);
+
 							$('#total_occupancy').html((response['Actual occupancy'] * 100).toFixed(0) + '%');
 							$('#budget_occupancy').html((response['Budgeted occupancy'] * 100).toFixed(0) + '%');
 							$('#casual_occupancy').html((response['Casual occupancy'] * 100).toFixed(1) + '%');
-							$('#occupancy_findings').html(response['all_findings']['Occupancy']);
-							
+
 							$('#tours').html(response['Tours']);
 							$('#tour_booking_conversion').html((response['Tour Booking Conversion'] * 100).toFixed(0) + '%');
 							$('#offers_made').html(response['Offers Made']);
-							$('#attraction_conversion_findings').html(response['all_findings']['Attraction / Conversion']);
+
 
 							$('#starts').html(response['Starts']);
 							$('#exits').html(response['Exits']);
@@ -428,34 +426,80 @@
 							$('#exits_25_36_months').html(response['Exits  - 25-36 Months']);
 							$('#exits_over_3').html(response['Exits  - Over 3']);
 							$('#upto_8_week_exits').html(response['Up to 8 Week Exits']);
-							$('#churn_retention_findings').html(response['all_findings']['Churn / Retention']);
+
 
 							$('#centre_NPS_score_existing').html(response['Centre NPS Score - Existing']);
 							$('#centre_NPS_score_new').html(response['Centre NPS Score - New']);
 							$('#centre_NPS_score_parents').html(response['Centre NPS Score - Parents']);
 							$('.post_tour_NPS').html(response['Post Tour NPS']);
 							$('#child_incidents').html(response['Child Incidents']);
-							$('#families_findings').html(response['all_findings']['Families']);
+
 
 							$('#turnover').html((response['Turnover (Perm - Voluntary)'] * 100).toFixed(0) + '%');
 							$('#programming_hours').html(response['Programming Hours']);
 							$('#target_programming_hours').html(response['Target Programming Hours']);
 							$('#employee_incidents').html(response['Employee Incidents']);
-							$('#employee_findings').html(response['all_findings']['Employees']);
 
-							Object.keys(all_findings).forEach(category => {
-								// Check if the category exists in response['all_findings']
-								if (response['all_findings'].hasOwnProperty(category)) {
-									// Update the HTML content with the findings
-									$(all_findings[category]).html(response['all_findings'][category]);
-								} else {
-									// If category doesn't exist, show "No Findings"
-									$(all_findings[category]).html("No Findings");
+
+							// Clear all findings spans initially
+							$('#occupancy_findings').html('');
+							$('#attraction_conversion_findings').html('');
+							$('#churn_retention_findings').html('');
+							$('#families_findings').html('');
+							$('#employee_findings').html('');
+
+							Object.keys(all_findings).forEach(key => {
+								// Check if key exists in all_findings
+								if (all_findings.hasOwnProperty(key)) {
+									var category = all_findings[key];
+									var array = category.split("(--)");
+
+									array.forEach(item => {
+										console.log("Key: " + key + ", Value: " + item);
+
+										if (key == 'Occupancy') {
+											$('#occupancy_findings').append(item + "<br>");
+										}
+
+										if (key == 'Attraction / Conversion') {
+											$('#attraction_conversion_findings').append(item + "<br>");
+										}
+
+										if (key == 'Churn / Retention') {
+											$('#churn_retention_findings').append(item + "<br>");
+										}
+
+										if (key == 'Families') {
+											$('#families_findings').append(item + "<br>");
+										}
+
+										if (key == 'Employees') {
+											$('#employee_findings').append(item + "<br>");
+										}
+									});	
+
+									if (!('Occupancy' in all_findings)) {
+										$('#occupancy_findings').html('No Findings Available');
+									}
+									if (!('Attraction / Conversion' in all_findings)) {
+										$('#attraction_conversion_findings').html('No Findings Available');
+									}
+									if (!('Churn / Retention' in all_findings)) {
+										$('#churn_retention_findings').html('No Findings Available');
+									}
+									if (!('Families' in all_findings)) {
+										$('#families_findings').html('No Findings Available');
+									}
+									if (!('Employees' in all_findings)) {
+										$('#employee_findings').html('No Findings Available');
+									}
+									
+
 								}
 							});
 
 						},
-						error: function(xhr, status, error) {
+						error: function (xhr, status, error) {
 							console.error('Error:', status, error);
 						}
 					});

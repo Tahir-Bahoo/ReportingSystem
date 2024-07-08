@@ -349,9 +349,9 @@ def main(Selected_center, Selected_date):
                                     f'>>> [WRITING TO OUTPUT]: AND condition was detected, both filters have passed, writing the text into output')
                                 # write(theme, finding, suggestion)
                                 if theme in all_findings:
-                                    all_findings[theme] += " " + finding + " " + suggestion
+                                    all_findings[theme] += "(--)" + finding + "(--)" + suggestion
                                 else:
-                                    all_findings[theme] = finding + " " + suggestion
+                                    all_findings[theme] = finding + "(--)" + suggestion
 
                                 
                                 final_flg = 1
@@ -360,9 +360,9 @@ def main(Selected_center, Selected_date):
                             f'>>> [WRITING TO OUTPUT]: Since filter 1 has passed and there is no AND condition so writing the text into output')
                         # write(theme, finding, suggestion)
                         if theme in all_findings:
-                            all_findings[theme] += " " + finding + " " + suggestion
+                            all_findings[theme] += "(--)" + finding + "(--)" + suggestion
                         else:
-                            all_findings[theme] = finding + " " + suggestion
+                            all_findings[theme] = finding + "(--)" + suggestion
                 else:
                     link = str(row[7]).strip()
                     final_flg = 0
@@ -441,10 +441,10 @@ def main(Selected_center, Selected_date):
                                     f'>>> [WRITING TO OUTPUT]: Since filter 1 did not pass, however there was a OR condition and filter 2 passed so writing the text into output')
                                 # write(theme, finding, suggestion)
                                 if theme in all_findings:
-                                    all_findings[theme] += " " + finding + " " + suggestion
+                                    all_findings[theme] += "(--)" + finding + "(--)" + suggestion
 
                                 else:
-                                    all_findings[theme] = finding + " " + suggestion
+                                    all_findings[theme] = finding + "(--)" + suggestion
                                 final_flg = 1
         except Exception as e:
             print(e, e.__traceback__.tb_lineno, 'learn')
