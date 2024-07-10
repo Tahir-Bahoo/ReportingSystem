@@ -8,7 +8,7 @@ import os
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from app.models import ExcelFile
+from app.models import ExcelFile, Iframe
 
 
 
@@ -53,7 +53,11 @@ def index(request):
 def dashboard(request):
     if request.user.is_anonymous:
         return redirect('home:loginuser')
-    return render(request, 'dashboard.html', ) 
+    
+    context = {
+        'iframe' : Iframe.objects.last()
+    }
+    return render(request, 'dashboard.html', context) 
 
 
 
