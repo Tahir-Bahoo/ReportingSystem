@@ -101,11 +101,11 @@ def generating_report(request):
             'all_findings' : all_findings,
         }
         print('\n\n')
-        for key in all_findings:
+        # for key in all_findings:
 
-            print(key)            # Print the key
-            print(all_findings[key])  # Print the corresponding value
-            print('\n\n') 
+        #     print(key)           
+        #     print(all_findings[key]) 
+        #     print('\n\n') 
 
         for val in data:
             response_data[val] = data[val]
@@ -186,6 +186,10 @@ def main(Selected_center, Selected_date):
             finding = str(row[11]).strip()
             suggestion = str(row[12]).strip()
             parameter_1 = str(row[4]).strip()
+            print('\n\n')
+            print(parameter_1, '[Parameter 1]')
+            print('\n\n')
+
             sign = str(row[5]).strip()
             parameter_2 = str(row[6]).strip()
             try:

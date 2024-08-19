@@ -19,20 +19,10 @@
 			<div class="centerFilters row justify-content-between">
 				<div class="col-auto">
 					<div class="row">
+					
 						<div class="col-auto">
 							<div class="input-group">
-								<label class="classLable" for="SelectMonthForm">Select Month</label>
-								<select class="form-select selectform" id="SelectMonthForm">
-									<option selected disabled>Choose...</option>
-									{% for value in header_values %}
-									<option value="{{ value }}">{{ value }}</option>
-									{% endfor %}
-								</select>
-							</div>
-						</div>
-						<div class="col-auto">
-							<div class="input-group">
-								<label class="classLable" for="SelectCenterForm">Select Center</label>
+								<label class="classLable" for="SelectCenterForm">Select Centre</label>
 								<select class="form-select selectform" id="SelectCenterForm">
 									<option selected disabled>Choose...</option>
 									<option value="Centre 1">Centre 1</option>
@@ -48,6 +38,17 @@
 									{% comment %} {% for center in all_centers %}
 									<option value="{{ center }}">{{ center }}</option>
 									{% endfor %} {% endcomment %}
+								</select>
+							</div>
+						</div>
+							<div class="col-auto">
+							<div class="input-group">
+								<label class="classLable" for="SelectMonthForm">Select Month</label>
+								<select class="form-select selectform" id="SelectMonthForm">
+									<option selected disabled>Choose...</option>
+									{% for value in header_values %}
+									<option value="{{ value }}">{{ value }}</option>
+									{% endfor %}
 								</select>
 							</div>
 						</div>
@@ -149,7 +150,7 @@
 				<div class="Detail">
 
 					<div class="description">
-						<h5 class="mb-4">Finding</h5>
+						<h5 class="mb-4">Findings</h5>
 						<p id="occupancy_findings">There are No Findings Yet!</p>
 						<!-- <div class="button text-center">
 							<button>
@@ -176,12 +177,12 @@
 						</div>
 						<div class="new"></div>
 						<div class="tableSteps col-6 col-sm-4 col-md-auto">
-							<h5>Tour Booking Conversion</h5>
+							<h5>Tour Conversion to Booking</h5>
 							<span id="tour_booking_conversion">--</span>
 						</div>
 						<div class="new"></div>
 						<div class="tableSteps col-6 col-sm-4 col-md-auto">
-							<h5>Offer Made</h5>
+							<h5>Offers sent</h5>
 							<span id="offers_made">--</span>
 						</div>
 					</div>
@@ -191,7 +192,7 @@
 				<div class="Detail">
 
 					<div class="description">
-						<h5 class="mb-4">Finding</h5>
+						<h5 class="mb-4">Findings</h5>
 						<p id="attraction_conversion_findings">There are No Findings Yet!</p>
 						<!-- <div class="button text-center">
 							<button>
@@ -226,22 +227,23 @@
 						</div>
 						<div class="new"></div>
 						<div class="tableSteps col-6 col-sm-4 col-md-auto">
-							<h5>Exits - Under 2</h5>
+							<h5>Exits <br> 0-2
+							</h5>
 							<span id="exits_under_2">--</span>
 						</div>
 						<div class="new"></div>
 						<div class="tableSteps col-6 col-sm-4 col-md-auto">
-							<h5>Exits - 25 tot 36 Months</h5>
+							<h5>Exits <br> 2-3</h5>
 							<span id="exits_25_36_months">--</span>
 						</div>
 						<div class="new"></div>
 						<div class="tableSteps col-6 col-sm-4 col-md-auto">
-							<h5>Exits - Over 3</h5>
+							<h5>Exits <br> 3-5</h5>
 							<span id="exits_over_3">--</span>
 						</div>
 						<div class="new"></div>
 						<div class="tableSteps col-6 col-sm-4 col-md-auto">
-							<h5>Exits in the first 8 weeks</h5>
+							<h5>Supprimer</h5>
 							<span id="upto_8_week_exits">--</span>
 						</div>
 					</div>
@@ -251,7 +253,7 @@
 				<div class="Detail">
 
 					<div class="description">
-						<h5 class="mb-4">Finding</h5>
+						<h5 class="mb-4">Findings</h5>
 						<p id="churn_retention_findings">There are No Findings Yet!</p>
 						<!-- <div class="button text-center">
 							<button>
@@ -286,17 +288,17 @@
 						</div>
 						<div class="new"></div>
 						<div class="tableSteps col-6 col-sm-4 col-md-auto">
-							<h5>NPS Score - Parents</h5>
+							<h5>Families NPS</h5>
 							<span id="centre_NPS_score_parents">--</span>
 						</div>
 						<div class="new"></div>
 						<div class="tableSteps col-6 col-sm-4 col-md-auto">
-							<h5>Post Tour NPS</h5>
+							<h5>Tour NPS</h5>
 							<span class="post_tour_NPS">--</span>
 						</div>
 						<div class="new"></div>
 						<div class="tableSteps col-6 col-sm-4 col-md-auto">
-							<h5>Child incident</h5>
+							<h5>Child incidents</h5>
 							<span id="child_incidents">--</span>
 						</div>
 					</div>
@@ -306,7 +308,7 @@
 				<div class="Detail">
 
 					<div class="description">
-						<h5 class="mb-4">Finding</h5>
+						<h5 class="mb-4">Findings</h5>
 						<p id="families_findings">There are No Findings Yet!</p>
 						<!-- <div class="button text-center">
 							<button>
@@ -329,7 +331,7 @@
 				<div class="col-lg-8">
 					<div class="row justify-content-around tableSection align-items-center">
 						<div class="tableSteps col-6 col-sm-4 col-md-auto">
-							<h5>Turnover</h5>
+							<h5>Employee</h5>
 							<span id="turnover">--</span>
 						</div>
 						<div class="new"></div>
@@ -344,12 +346,12 @@
 						</div>
 						<div class="new"></div>
 						<div class="tableSteps col-6 col-sm-4 col-md-auto">
-							<h5>Post Tour NPS</h5>
+							<h5>Delete</h5>
 							<span class="post_tour_NPS">--</span>
 						</div>
 						<div class="new"></div>
 						<div class="tableSteps col-6 col-sm-4 col-md-auto">
-							<h5>Employee incident</h5>
+							<h5>Employee incidents</h5>
 							<span id="employee_incidents">--</span>
 						</div>
 
@@ -360,7 +362,7 @@
 				<div class="Detail">
 
 					<div class="description">
-						<h5 class="mb-4">Finding</h5>
+						<h5 class="mb-4">Findings</h5>
 						<p id="employee_findings">There are No Findings Yet!</p>
 						<!-- <div class="button text-center">
 							<button>

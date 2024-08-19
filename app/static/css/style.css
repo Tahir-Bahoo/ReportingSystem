@@ -42,6 +42,7 @@ h5{
     /* border-right: 10px solid white; */
 }
 
+
 .tableSteps:last-child span {
     border-right: none;
 }
@@ -49,6 +50,7 @@ h5{
 .tableSteps h5 {
     margin: 0;
     flex-shrink: 0;
+    display: grid;
 }
 .Detail{
     border-radius: 15px;
