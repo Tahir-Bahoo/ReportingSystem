@@ -115,7 +115,10 @@ def generating_report(request):
     return JsonResponse({"messaaage": "error"})
 
 
-# def write(theme, finding, suggestion):
+def write(theme, finding, suggestion):
+    print(theme,"[[checking]]")
+    print(finding, "[[checking]]")
+    print(suggestion, "[[checking]]")
 #     print('\n\n')
 #     print('This is rite Function')
 #     print('\n\n')
@@ -186,9 +189,9 @@ def main(Selected_center, Selected_date):
             finding = str(row[11]).strip()
             suggestion = str(row[12]).strip()
             parameter_1 = str(row[4]).strip()
-            print('\n\n')
+            # print('\n\n')
             print(parameter_1, '[Parameter 1]')
-            print('\n\n')
+            # print('\n\n')
 
             sign = str(row[5]).strip()
             parameter_2 = str(row[6]).strip()
@@ -355,7 +358,7 @@ def main(Selected_center, Selected_date):
                                     f'>>> [FILTER 2 PASSED] [AND CONDITION]: {parameter_3} [{prm_3}] {sign} {prm_4_nm} [{prm_4}]')
                                 print(
                                     f'>>> [WRITING TO OUTPUT]: AND condition was detected, both filters have passed, writing the text into output')
-                                # write(theme, finding, suggestion)
+                                write(theme, finding, suggestion)
                                 if theme in all_findings:
                                     all_findings[theme] += "(--)" + finding + "(--)" + suggestion
                                 else:
@@ -366,7 +369,7 @@ def main(Selected_center, Selected_date):
                     else:
                         print(
                             f'>>> [WRITING TO OUTPUT]: Since filter 1 has passed and there is no AND condition so writing the text into output')
-                        # write(theme, finding, suggestion)
+                        write(theme, finding, suggestion)
                         if theme in all_findings:
                             all_findings[theme] += "(--)" + finding + "(--)" + suggestion
                         else:
@@ -447,7 +450,7 @@ def main(Selected_center, Selected_date):
                                     f'>>> [FILTER 2 PASSED] [OR CONDITION]: {parameter_3} [{prm_3}] {sign} {prm_4_nm} [{prm_4}]')
                                 print(
                                     f'>>> [WRITING TO OUTPUT]: Since filter 1 did not pass, however there was a OR condition and filter 2 passed so writing the text into output')
-                                # write(theme, finding, suggestion)
+                                write(theme, finding, suggestion)
                                 if theme in all_findings:
                                     all_findings[theme] += "(--)" + finding + "(--)" + suggestion
 
