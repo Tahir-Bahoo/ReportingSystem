@@ -54,6 +54,8 @@ def dashboard(request):
     if request.user.is_anonymous:
         return redirect('home:loginuser')
     
+    print(Iframe.objects.last().iframe_link)
+    
     context = {
         'iframe' : Iframe.objects.last()
     }
