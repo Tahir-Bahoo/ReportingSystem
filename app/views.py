@@ -16,8 +16,9 @@ def index(request):
     
     if request.user.is_anonymous:
         return redirect('home:loginuser')
-    
+	
     excel_path = ExcelFile.objects.last()
+
     excel_input = os.path.abspath(os.getcwd() + f'/media/{excel_path}')
 
     links_workbook = load_workbook(excel_input, data_only=True)
@@ -29,8 +30,8 @@ def index(request):
     all_centers = []
     for row in sheet.iter_rows(min_row=1, max_row=sheet.max_row, min_col=1, max_col=1, values_only=True):
         all_centers.append(row[0])
-        # print(row)
-    # print(set(all_centers))
+        print(row)
+    print(excel_input, 'oqwdnjoqwidhjoidqjwdpqwhjdoidow')
 
 
     formatted_header_values = []
@@ -150,7 +151,7 @@ def main(Selected_center, Selected_date):
 
 	# center,target_date = config
 
-	links_workbook = load_workbook('input.xlsx',data_only=True)
+	links_workbook = load_workbook(excel_input,data_only=True)
 	sheet = links_workbook['1st - Data Set - Center data']
 	all_center_data = {}
 
