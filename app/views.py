@@ -134,336 +134,360 @@ def write(theme, finding, suggestion):
 
 
 def main(Selected_center, Selected_date):
-    
-    excel_path = ExcelFile.objects.last()
-    excel_input = os.path.abspath(os.getcwd() + f'/media/{excel_path}')
 
-    rows = []
-    data = {}
-    all_findings = {}
-    # config = open('config.txt','r',encoding='utf-8-sig').readlines()
-    # config = [x.strip().split('>')[-1] for x in config if x.strip()!='']
+	excel_path = ExcelFile.objects.last()
+	excel_input = os.path.abspath(os.getcwd() + f'/media/{excel_path}')
 
-    center = str(Selected_center)
-    target_date = str(Selected_date)
-
-    # center = 'Centre 3'
-    # target_date = 'Oct-2022'
-
-    # center,target_date = config
-
-    links_workbook = load_workbook(excel_input, data_only=True)
-    sheet = links_workbook['1st - Data Set - Center data']
-    all_center_data = {}
-
-    indx = 0
-    for row in sheet.iter_rows(values_only=True):
-        # print(row)
-        for cell in row:
-            if isinstance(cell, datetime):
-                cell_value = cell.strftime("%b-%Y")
-            else:
-                cell_value = str(cell) if cell is not None else ""
-            rows.append(cell_value)
-
-        if indx == 0:
-            for date in rows[2::]:
-                if date == target_date:
-                    
-                    indx = rows.index(date)
-        else:
-            if row[0] == center:
-                data[row[1]] = row[indx]
-
-            if row[0] == 'All Centers':
-                all_center_data[row[1]] = row[indx]
-
-    print(f'>>> Data recorded for {center} on {target_date}')
-    # for val in data:
-    #     print(f'{val}: {data[val]}')
-
-    print('\n\n')
-    print(f'>>> Processing the conditions')
-    sheet = links_workbook['2nd - Conditions Script & text']
-    for row in sheet.iter_rows(values_only=True):
-        try:
-            theme = str(row[1]).strip()
-            finding = str(row[11]).strip()
-            suggestion = str(row[12]).strip()
-            parameter_1 = str(row[4]).strip()
-            # print('\n\n')
-            print(parameter_1, '[Parameter 1]')
-            # print('\n\n')
-
-            sign = str(row[5]).strip()
-            parameter_2 = str(row[6]).strip()
-            try:
-                float(parameter_2)
-                if float(parameter_2) < 1:
-                    finding = finding.replace(
-                        '[Parameter 2]', str(float(parameter_2)*100)+'%')
-                else:
-                    finding = finding.replace(
-                        '[Parameter 2]', str(float(parameter_2))+'%')
-            except:
-                finding = finding.replace('[Parameter 2]', parameter_2)
-
-            finding = finding.replace('[Parameter 1]', parameter_1)
-            prm_2_nm = parameter_2[:]
-            parameter_1_l = [x for x in data if parameter_1 in x]
-            if 'Avg' not in parameter_2:
-                parameter_2_l = [x for x in data if parameter_2 in x]
-            else:
-                parameter_2_l = []
-
-            flag = 1
-            if parameter_1_l == []:
-                print(
-                    f'>>> Parameter 1: {parameter_1} is not there in sheet 1 for {center} on {target_date}')
-                flag = 0
-
-            if flag != 0:
-                if parameter_2_l == []:
-                    if '%' in parameter_2:
-                        parameter_2 = float(
-                            parameter_2.strip().replace('%', ''))
-                        flag = 2
-                    else:
-                        try:
-                            parameter_2 = float(parameter_2.strip())
-                            flag = 2
-                        except:
-                            pass
-
-                    if flag == 1:
-                        if 'Avg' not in parameter_2:
-                            print(
-                                f'>>> Parameter 2: {parameter_2} is not there in sheet 1 for {center} on {target_date}')
-                            flag = 0
-
-            if flag > 0:
-                parameter_1 = parameter_1_l[0]
-                if flag == 1:
-                    if 'Avg' not in parameter_2:
-                        parameter_2 = parameter_2_l[0]
-
-                prm_1 = data[parameter_1]
-                if flag == 1:
-                    if 'Avg' in parameter_2:
-                        prm_2 = all_center_data[parameter_2]
-                    else:
-                        prm_2 = data[parameter_2]
-
-                elif flag == 2:
-                    prm_2 = parameter_2
-
-                filter_1_match = 0
-                if sign == '<':
-                    if prm_1 < prm_2:
-                        filter_1_match = 1
-
-                elif sign == '>':
-                    if prm_1 > prm_2:
-                        filter_1_match = 1
-
-                elif sign == '=':
-                    if prm_1 == prm_2:
-                        filter_1_match = 1
-
-                elif sign == '< =':
-                    if prm_1 <= prm_2:
-                        filter_1_match = 1
-
-                elif sign == '> =':
-                    if prm_1 >= prm_2:
-                        filter_1_match = 1
-
-                if filter_1_match == 1:
-                    print(
-                        f'>>> [FILTER 1 PASSED]: {parameter_1} [{prm_1}] {sign} {prm_2_nm} [{prm_2}]')
-                    link = str(row[7]).strip()
-                    final_flg = 0
-
-                    if 'AND' in link:
-                        parameter_3 = str(row[8]).strip()
-                        sign = str(row[9]).strip()
-                        parameter_4 = str(row[10]).strip()
-                        prm_4_nm = parameter_4
-
-                        parameter_3_l = [
-                            x for x in data if parameter_3.lower().strip() in x.lower().strip()]
-                        parameter_4_l = [
-                            x for x in data if parameter_4.lower().strip() in x.lower().strip()]
-                        flag = 1
-
-                        if parameter_3_l == []:
-                            print(
-                                f'>>> Parameter 3: {parameter_3} is not there in sheet 1 for {center} on {target_date}')
-                            flag = 0
-
-                        if flag != 0:
-                            if parameter_4_l == []:
-                                if '%' in parameter_4:
-                                    parameter_4 = float(
-                                        parameter_4.strip().replace('%', ''))
-                                    flag = 2
-                                else:
-                                    try:
-                                        parameter_4 = float(
-                                            parameter_4.strip())
-                                        flag = 2
-                                    except:
-                                        pass
-
-                                if flag == 1:
-                                    if 'Avg' not in parameter_4:
-                                        print(
-                                            f'>>> Parameter 4: {parameter_4} is not there in sheet 1 for {center} on {target_date}')
-                                        flag = 0
-
-                        if flag > 0:
-                            parameter_3 = parameter_3_l[0]
-
-                            prm_3 = data[parameter_3]
-                            if flag == 1:
-                                if 'Avg' in parameter_4:
-                                    prm_4 = all_center_data[parameter_4]
-                                else:
-                                    prm_4 = data[parameter_4_l[0]]
-
-                            elif flag == 2:
-                                prm_4 = parameter_4
-
-                            filter_2_match = 0
-                            if sign == '<':
-                                if prm_3 < prm_4:
-                                    filter_2_match = 1
-
-                            elif sign == '>':
-                                if prm_3 > prm_4:
-                                    filter_2_match = 1
-
-                            elif sign == '> =':
-                                if prm_3 >= prm_4:
-                                    filter_2_match = 1
-
-                            elif sign == '< =':
-                                if prm_3 <= prm_4:
-                                    filter_2_match = 1
-
-                            elif sign == '=':
-                                if prm_3 == prm_4:
-                                    filter_2_match = 1
-
-                            if filter_2_match == 1:
-                                print(
-                                    f'>>> [FILTER 2 PASSED] [AND CONDITION]: {parameter_3} [{prm_3}] {sign} {prm_4_nm} [{prm_4}]')
-                                print(
-                                    f'>>> [WRITING TO OUTPUT]: AND condition was detected, both filters have passed, writing the text into output')
-                                write(theme, finding, suggestion)
-                                if theme in all_findings:
-                                    all_findings[theme] += "(--)" + finding + "(--)" + suggestion
-                                else:
-                                    all_findings[theme] = finding + "(--)" + suggestion
-
-                                
-                                final_flg = 1
-                    else:
-                        print(
-                            f'>>> [WRITING TO OUTPUT]: Since filter 1 has passed and there is no AND condition so writing the text into output')
-                        write(theme, finding, suggestion)
-                        if theme in all_findings:
-                            all_findings[theme] += "(--)" + finding + "(--)" + suggestion
-                        else:
-                            all_findings[theme] = finding + "(--)" + suggestion
-                else:
-                    link = str(row[7]).strip()
-                    final_flg = 0
-                    if 'OR' in link:
-                        parameter_3 = str(row[8]).strip()
-                        sign = str(row[9]).strip()
-                        parameter_4 = str(row[10]).strip()
-                        prm_4_nm = parameter_4
-                        parameter_3_l = [
-                            x for x in data if parameter_3.lower().strip() in x.lower().strip()]
-                        flag = 1
-
-                        if parameter_3_l == []:
-                            print(
-                                f'>>> Parameter 3: {parameter_3} is not there in sheet 1 for {center} on {target_date}')
-                            flag = 0
-
-                        if flag != 0:
-                            if '%' in parameter_4:
-                                parameter_4 = float(
-                                    parameter_4.strip().replace('%', ''))
-                                flag = 2
-                            else:
-                                try:
-                                    parameter_4 = float(parameter_4.strip())
-                                    flag = 2
-                                except:
-                                    pass
-
-                            if flag == 1:
-                                parameter_4_l = [
-                                    x for x in data if parameter_4.lower().strip() in x.lower().strip()]
-                                if parameter_4_l == []:
-                                    if 'Avg' not in parameter_4:
-                                        print(
-                                            f'>>> Parameter 4: {parameter_4} is not there in sheet 1 for {center} on {target_date}')
-                                        flag = 0
-
-                        if flag > 0:
-                            parameter_3 = parameter_3_l[0]
-
-                            prm_3 = data[parameter_3]
-                            if flag == 1:
-                                if 'Avg' in parameter_4:
-                                    prm_4 = all_center_data[parameter_4]
-                                else:
-                                    prm_4 = data[parameter_4_l[0]]
-                            elif flag == 2:
-                                prm_4 = parameter_4
-
-                            filter_2_match = 0
-                            if sign == '<':
-                                if prm_3 < prm_4:
-                                    filter_2_match = 1
-
-                            elif sign == '>':
-                                if prm_3 > prm_4:
-                                    filter_2_match = 1
-
-                            elif sign == '> =':
-                                if prm_3 >= prm_4:
-                                    filter_2_match = 1
-
-                            elif sign == '< =':
-                                if prm_3 <= prm_4:
-                                    filter_2_match = 1
-
-                            elif sign == '=':
-                                if prm_3 == prm_4:
-                                    filter_2_match = 1
-
-                            if filter_2_match == 1:
-                                print(
-                                    f'>>> [FILTER 2 PASSED] [OR CONDITION]: {parameter_3} [{prm_3}] {sign} {prm_4_nm} [{prm_4}]')
-                                print(
-                                    f'>>> [WRITING TO OUTPUT]: Since filter 1 did not pass, however there was a OR condition and filter 2 passed so writing the text into output')
-                                write(theme, finding, suggestion)
-                                if theme in all_findings:
-                                    all_findings[theme] += "(--)" + finding + "(--)" + suggestion
-
-                                else:
-                                    all_findings[theme] = finding + "(--)" + suggestion
-                                final_flg = 1
-        except Exception as e:
-            print(e, e.__traceback__.tb_lineno, 'learn')
+	rows = []
+	data = {}
+	all_findings = {}
+	center = str(Selected_center)
+	target_date = str(Selected_date)
 
 
-    # print('\n\n')
-    # print('all_findings', all_findings)
-    # print('\n\n')
-    return data, all_findings
+	# config = open('config.txt','r',encoding='utf-8-sig').readlines()
+	# config = [x.strip().split('>')[-1] for x in config if x.strip()!='']
+
+	# center,target_date = config
+
+	links_workbook = load_workbook('input.xlsx',data_only=True)
+	sheet = links_workbook['1st - Data Set - Center data']
+	all_center_data = {}
+
+	indx = 0
+	for row in sheet.iter_rows(values_only=True):
+		print(row)
+		for cell in row:
+			if isinstance(cell, datetime):
+				cell_value = cell.strftime("%b-%Y")
+			else:
+				cell_value = str(cell) if cell is not None else ""
+			rows.append(cell_value)
+
+		if indx==0:
+			for date in rows[2::]:
+				if date == target_date:
+					indx = rows.index(date)
+		else:
+			if row[0] == center:
+				data[row[1]] = row[indx]
+
+			if row[0] == 'All Centers':
+				all_center_data[row[1]] = row[indx]
+
+	print(f'>>> Data recorded for {center} on {target_date}')
+	for val in data:
+		print(f'{val}: {data[val]}')
+
+	print('\n\n')
+	print(f'>>> Processing the conditions')
+	sheet = links_workbook['2nd - Conditions Script & text']
+	for row in sheet.iter_rows(values_only=True):
+		try:
+			theme = str(row[1]).strip()
+			finding = str(row[11]).strip()
+			suggestion = str(row[12]).strip()
+			parameter_1 = str(row[4]).strip()
+			sign = str(row[5]).strip()
+			parameter_2 = str(row[6]).strip()
+			prm_2_nm = parameter_2[:]
+			try:
+				float(parameter_2)
+				if float(parameter_2)<1:
+					finding = finding.replace('[Parameter 2]',str(float(parameter_2)*100)+'%')
+				else:
+					finding = finding.replace('[Parameter 2]',str(float(parameter_2))+'%')
+			except:
+				pass
+			
+			parameter_1_l = [x for x in data if parameter_1 in x]
+			if 'Avg' not in parameter_2:
+				parameter_2_l = [x for x in data if parameter_2 in x]
+			else:
+				parameter_2_l = []
+
+			flag = 1
+			if parameter_1_l==[]:
+				print(f'>>> Parameter 1: {parameter_1} is not there in sheet 1 for {center} on {target_date}')
+				flag = 0
+
+			if flag!=0:
+				if parameter_2_l==[]:
+					if '%' in parameter_2:
+						parameter_2 = float(parameter_2.strip().replace('%',''))
+						flag = 2
+					else:
+						try:
+							parameter_2 = float(parameter_2.strip())
+							flag = 2
+						except:
+							pass
+
+					if flag==1:
+						if 'Avg' not in parameter_2:
+							print(f'>>> Parameter 2: {parameter_2} is not there in sheet 1 for {center} on {target_date}')
+							flag = 0
+
+			if flag>0:
+				parameter_1 = parameter_1_l[0]
+				if flag==1:
+					if 'Avg' not in parameter_2:
+						parameter_2 = parameter_2_l[0]
+
+				prm_1 = data[parameter_1]
+				temp_prm = prm_1
+				if temp_prm<1:
+					temp_prm = f'{round(prm_1*100,2)}%'
+				else:
+					try:
+						temp_prm = round(prm_1,2)
+					except Exception as e:
+						print(e)
+				finding = finding.replace('[Parameter 1]',str(temp_prm))
+				if flag==1:
+					if 'Avg' in parameter_2:
+						prm_2 = all_center_data[parameter_2]
+					else:
+						prm_2 = data[parameter_2]
+
+				elif flag==2:
+					prm_2 = parameter_2
+
+				temp_prm = prm_2
+				if temp_prm<1:
+					temp_prm = f'{round(prm_2*100,2)}%'
+				else:
+					try:
+						temp_prm = round(prm_2,2)
+					except Exception as e:
+						print(e)
+
+				finding = finding.replace('[Parameter 2]',str(temp_prm))
+				#finding = finding.replace('[Parameter 2]',str(prm_2))
+				filter_1_match = 0
+				if sign=='<':
+					if prm_1<prm_2:
+						filter_1_match = 1
+
+				elif sign=='>':
+					if prm_1>prm_2:
+						filter_1_match = 1
+
+				elif sign=='=':
+					if prm_1==prm_2:
+						filter_1_match = 1
+
+				elif sign=='< =':
+					if prm_1<=prm_2:
+						filter_1_match = 1
+
+				elif sign=='> =':
+					if prm_1>=prm_2:
+						filter_1_match = 1
+
+				if filter_1_match==1:
+					print(f'>>> [FILTER 1 PASSED]: {parameter_1} [{prm_1}] {sign} {prm_2_nm} [{prm_2}]')
+					link = str(row[7]).strip()
+					final_flg = 0
+
+					if 'AND' in link:
+						parameter_3 = str(row[8]).strip()
+						sign = str(row[9]).strip()
+						parameter_4 = str(row[10]).strip()
+						prm_4_nm = parameter_4
+
+						parameter_3_l = [x for x in data if parameter_3.lower().strip() in x.lower().strip()]
+						parameter_4_l = [x for x in data if parameter_4.lower().strip() in x.lower().strip()]
+						flag = 1
+
+						if parameter_3_l==[]:
+							print(f'>>> Parameter 3: {parameter_3} is not there in sheet 1 for {center} on {target_date}')
+							flag = 0
+
+						if flag!=0:
+							if parameter_4_l==[]:
+								if '%' in parameter_4:
+									parameter_4 = float(parameter_4.strip().replace('%',''))
+									flag = 2
+								else:
+									try:
+										parameter_4 = float(parameter_4.strip())
+										flag = 2
+									except:
+										pass
+
+								if flag==1:
+									if 'Avg' not in parameter_4:
+										print(f'>>> Parameter 4: {parameter_4} is not there in sheet 1 for {center} on {target_date}')
+										flag = 0
+
+						if flag>0:
+							parameter_3 = parameter_3_l[0]
+
+							prm_3 = data[parameter_3]
+							if flag==1:
+								if 'Avg' in parameter_4:
+									prm_4 = all_center_data[parameter_4]
+								else:
+									prm_4 = data[parameter_4_l[0]]
+
+							elif flag==2:
+								prm_4 = parameter_4
+
+							filter_2_match = 0
+							if sign=='<':
+								if prm_3<prm_4:
+									filter_2_match = 1
+
+							elif sign=='>':
+								if prm_3>prm_4:
+									filter_2_match = 1
+
+							elif sign=='> =':
+								if prm_3>=prm_4:
+									filter_2_match = 1
+
+							elif sign=='< =':
+								if prm_3<=prm_4:
+									filter_2_match = 1
+
+							elif sign=='=':
+								if prm_3==prm_4:
+									filter_2_match = 1
+
+							temp_prm = prm_3
+							if prm_3<1:
+								prm_3 = f'{round(prm_3*100,2)}%'
+							else:
+								try:
+									prm_3 = round(prm_3,2)
+								except Exception as e:
+									print(e)
+							finding = finding.replace('[Parameter 3]',str(prm_3))
+
+							if prm_4<1:
+								prm_4 = f'{round(prm_4*100,2)}%'
+							else:
+								try:
+									prm_4 = round(prm_4,2)
+								except Exception as e:
+									print(e)
+
+							finding = finding.replace('[Parameter 4]',str(prm_4))
+
+							if filter_2_match==1:
+								print(f'>>> [FILTER 2 PASSED] [AND CONDITION]: {parameter_3} [{prm_3}] {sign} {prm_4_nm} [{prm_4}]')
+								print(f'>>> [WRITING TO OUTPUT]: AND condition was detected, both filters have passed, writing the text into output')
+								write(theme,finding,suggestion)
+								if theme in all_findings:
+									all_findings[theme] += "(--)" + finding + "(--)" + suggestion
+								else:
+									all_findings[theme] = finding + "(--)" + suggestion
+								final_flg = 1
+					else:
+						print(f'>>> [WRITING TO OUTPUT]: Since filter 1 has passed and there is no AND condition so writing the text into output')
+						write(theme,finding,suggestion)
+						if theme in all_findings:
+							all_findings[theme] += "(--)" + finding + "(--)" + suggestion
+						else:
+							all_findings[theme] = finding + "(--)" + suggestion
+				else:
+					link = str(row[7]).strip()
+					final_flg = 0
+					if 'OR' in link:
+						parameter_3 = str(row[8]).strip()
+						sign = str(row[9]).strip()
+						parameter_4 = str(row[10]).strip()
+						prm_4_nm = parameter_4
+						parameter_3_l = [x for x in data if parameter_3.lower().strip() in x.lower().strip()]
+						flag = 1
+
+						if parameter_3_l==[]:
+							print(f'>>> Parameter 3: {parameter_3} is not there in sheet 1 for {center} on {target_date}')
+							flag = 0
+
+						if flag!=0:
+							if '%' in parameter_4:
+								parameter_4 = float(parameter_4.strip().replace('%',''))
+								flag = 2
+							else:
+								try:
+									parameter_4 = float(parameter_4.strip())
+									flag = 2
+								except:
+									pass
+
+							if flag==1:
+								parameter_4_l = [x for x in data if parameter_4.lower().strip() in x.lower().strip()]
+								if parameter_4_l==[]:
+									if 'Avg' not in parameter_4:
+										print(f'>>> Parameter 4: {parameter_4} is not there in sheet 1 for {center} on {target_date}')
+										flag = 0
+
+						if flag>0:
+							parameter_3 = parameter_3_l[0]
+
+							prm_3 = data[parameter_3]
+							if flag==1:
+								if 'Avg' in parameter_4:
+									prm_4 = all_center_data[parameter_4]
+								else:
+									prm_4 = data[parameter_4_l[0]]
+							elif flag==2:
+								prm_4 = parameter_4
+
+							filter_2_match = 0
+							if sign=='<':
+								if prm_3<prm_4:
+									filter_2_match = 1
+
+							elif sign=='>':
+								if prm_3>prm_4:
+									filter_2_match = 1
+
+							elif sign=='> =':
+								if prm_3>=prm_4:
+									filter_2_match = 1
+
+							elif sign=='< =':
+								if prm_3<=prm_4:
+									filter_2_match = 1
+
+							elif sign=='=':
+								if prm_3==prm_4:
+									filter_2_match = 1
+
+							temp_prm = prm_3
+							if prm_3<1:
+								prm_3 = f'{round(prm_3*100,2)}%'
+							else:
+								try:
+									prm_3 = round(prm_3,2)
+								except Exception as e:
+									print(e)
+							print('3',prm_3)
+							finding = finding.replace('[Parameter 3]',str(prm_3))
+
+							if prm_4<1:
+								prm_4 = f'{round(prm_4*100,2)}%'
+							else:
+								try:
+									prm_4 = round(prm_4,2)
+								except Exception as e:
+									print(e)
+							print('4',prm_4)
+							finding = finding.replace('[Parameter 4]',str(prm_4))
+
+							if filter_2_match==1:
+								print(f'>>> [FILTER 2 PASSED] [OR CONDITION]: {parameter_3} [{prm_3}] {sign} {prm_4_nm} [{prm_4}]')
+								print(f'>>> [WRITING TO OUTPUT]: Since filter 1 did not pass, however there was a OR condition and filter 2 passed so writing the text into output')
+								write(theme,finding,suggestion)
+								if theme in all_findings:
+									all_findings[theme] += "(--)" + finding + "(--)" + suggestion
+								else:
+									all_findings[theme] = finding + "(--)" + suggestion
+								final_flg = 1
+		except Exception as e:
+			print(e,e.__traceback__.tb_lineno)
+
+	return data, all_findings

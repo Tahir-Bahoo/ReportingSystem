@@ -411,6 +411,7 @@
 						},
 						success: function (response) {
 							const all_findings = response['all_findings']
+							console.log(response)
 
 							$('#total_occupancy').html((response['Actual occupancy'] * 100).toFixed(0) + '%');
 							$('#budget_occupancy').html((response['Budgeted occupancy'] * 100).toFixed(0) + '%');
