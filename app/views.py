@@ -28,10 +28,6 @@ def index(request):
     header_values = [cell.value for cell in header_row][2::]
 
     all_centers = []
-    for row in sheet.iter_rows(min_row=1, max_row=sheet.max_row, min_col=1, max_col=1, values_only=True):
-        all_centers.append(row[0])
-        print(row)
-    print(excel_input, 'oqwdnjoqwidhjoidqjwdpqwhjdoidow')
 
 
     formatted_header_values = []
@@ -138,6 +134,7 @@ def main(Selected_center, Selected_date):
 
 	excel_path = ExcelFile.objects.last()
 	excel_input = os.path.abspath(os.getcwd() + f'/media/{excel_path}')
+	
 
 	rows = []
 	data = {}
@@ -145,12 +142,12 @@ def main(Selected_center, Selected_date):
 	center = str(Selected_center)
 	target_date = str(Selected_date)
 
-
 	# config = open('config.txt','r',encoding='utf-8-sig').readlines()
 	# config = [x.strip().split('>')[-1] for x in config if x.strip()!='']
 
 	# center,target_date = config
 
+	
 	links_workbook = load_workbook(excel_input,data_only=True)
 	sheet = links_workbook['1st - Data Set - Center data']
 	all_center_data = {}
@@ -192,18 +189,14 @@ def main(Selected_center, Selected_date):
 			sign = str(row[5]).strip()
 			parameter_2 = str(row[6]).strip()
 			prm_2_nm = parameter_2[:]
-			try:
-				float(parameter_2)
-				if float(parameter_2)<1:
-					finding = finding.replace('[Parameter 2]',str(float(parameter_2)*100)+'%')
-				else:
-					finding = finding.replace('[Parameter 2]',str(float(parameter_2))+'%')
-			except:
-				pass
-			
 			parameter_1_l = [x for x in data if parameter_1 in x]
 			if 'Avg' not in parameter_2:
-				parameter_2_l = [x for x in data if parameter_2 in x]
+				try:
+					float(str(parameter_2).strip().replace('%',''))
+					parameter_2_l = []
+				except Exception as e:
+					print(e)
+					parameter_2_l = [x for x in data if parameter_2 in x]
 			else:
 				parameter_2_l = []
 
@@ -212,10 +205,11 @@ def main(Selected_center, Selected_date):
 				print(f'>>> Parameter 1: {parameter_1} is not there in sheet 1 for {center} on {target_date}')
 				flag = 0
 
+			#print(parameter_2_l,parameter_2)
 			if flag!=0:
 				if parameter_2_l==[]:
 					if '%' in parameter_2:
-						parameter_2 = float(parameter_2.strip().replace('%',''))
+						parameter_2 = float(str(parameter_2).strip().replace('%',''))
 						flag = 2
 					else:
 						try:
@@ -237,14 +231,17 @@ def main(Selected_center, Selected_date):
 
 				prm_1 = data[parameter_1]
 				temp_prm = prm_1
-				if temp_prm<1:
+				if '[Parameter 1]&[%]' in finding:
 					temp_prm = f'{round(prm_1*100,2)}%'
+					finding = finding.replace('[Parameter 1]&[%]',str(temp_prm))
 				else:
 					try:
 						temp_prm = round(prm_1,2)
 					except Exception as e:
 						print(e)
-				finding = finding.replace('[Parameter 1]',str(temp_prm))
+					finding = finding.replace('[Parameter 1]',str(temp_prm))
+
+				
 				if flag==1:
 					if 'Avg' in parameter_2:
 						prm_2 = all_center_data[parameter_2]
@@ -255,15 +252,17 @@ def main(Selected_center, Selected_date):
 					prm_2 = parameter_2
 
 				temp_prm = prm_2
-				if temp_prm<1:
+				if '[Parameter 2]&[%]' in finding:
 					temp_prm = f'{round(prm_2*100,2)}%'
+					finding = finding.replace('[Parameter 2]&[%]',str(temp_prm))
 				else:
 					try:
 						temp_prm = round(prm_2,2)
 					except Exception as e:
 						print(e)
+					finding = finding.replace('[Parameter 2]',str(temp_prm))
 
-				finding = finding.replace('[Parameter 2]',str(temp_prm))
+				
 				#finding = finding.replace('[Parameter 2]',str(prm_2))
 				filter_1_match = 0
 				if sign=='<':
@@ -357,24 +356,26 @@ def main(Selected_center, Selected_date):
 									filter_2_match = 1
 
 							temp_prm = prm_3
-							if prm_3<1:
-								prm_3 = f'{round(prm_3*100,2)}%'
+							if '[Parameter 3]&[%]' in finding:
+								temp_prm = f'{round(prm_3*100,2)}%'
+								finding = finding.replace('[Parameter 3]&[%]',str(temp_prm))
 							else:
 								try:
-									prm_3 = round(prm_3,2)
+									temp_prm = round(prm_3,2)
 								except Exception as e:
 									print(e)
-							finding = finding.replace('[Parameter 3]',str(prm_3))
+								finding = finding.replace('[Parameter 3]',str(temp_prm))
 
-							if prm_4<1:
-								prm_4 = f'{round(prm_4*100,2)}%'
+							temp_prm = prm_4
+							if '[Parameter 4]&[%]' in finding:
+								temp_prm = f'{round(prm_4*100,2)}%'
+								finding = finding.replace('[Parameter 4]&[%]',str(temp_prm))
 							else:
 								try:
-									prm_4 = round(prm_4,2)
+									temp_prm = round(prm_4,2)
 								except Exception as e:
 									print(e)
-
-							finding = finding.replace('[Parameter 4]',str(prm_4))
+								finding = finding.replace('[Parameter 4]',str(temp_prm))
 
 							if filter_2_match==1:
 								print(f'>>> [FILTER 2 PASSED] [AND CONDITION]: {parameter_3} [{prm_3}] {sign} {prm_4_nm} [{prm_4}]')
@@ -459,25 +460,26 @@ def main(Selected_center, Selected_date):
 									filter_2_match = 1
 
 							temp_prm = prm_3
-							if prm_3<1:
-								prm_3 = f'{round(prm_3*100,2)}%'
+							if '[Parameter 3]&[%]' in finding:
+								temp_prm = f'{round(prm_3*100,2)}%'
+								finding = finding.replace('[Parameter 3]&[%]',str(temp_prm))
 							else:
 								try:
-									prm_3 = round(prm_3,2)
+									temp_prm = round(prm_3,2)
 								except Exception as e:
 									print(e)
-							print('3',prm_3)
-							finding = finding.replace('[Parameter 3]',str(prm_3))
+								finding = finding.replace('[Parameter 3]',str(temp_prm))
 
-							if prm_4<1:
-								prm_4 = f'{round(prm_4*100,2)}%'
+							temp_prm = prm_4
+							if '[Parameter 4]&[%]' in finding:
+								temp_prm = f'{round(prm_4*100,2)}%'
+								finding = finding.replace('[Parameter 4]&[%]',str(temp_prm))
 							else:
 								try:
-									prm_4 = round(prm_4,2)
+									temp_prm = round(prm_4,2)
 								except Exception as e:
 									print(e)
-							print('4',prm_4)
-							finding = finding.replace('[Parameter 4]',str(prm_4))
+								finding = finding.replace('[Parameter 4]',str(temp_prm))
 
 							if filter_2_match==1:
 								print(f'>>> [FILTER 2 PASSED] [OR CONDITION]: {parameter_3} [{prm_3}] {sign} {prm_4_nm} [{prm_4}]')
